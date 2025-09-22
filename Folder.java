@@ -13,15 +13,14 @@ public class Folder {
 
     private void sizeUpdate() {
         this.size = 0;
-        if (parentFolder != null) {
-            parentFolder.sizeUpdate();
-        }
-
         for (File file : fileList) {
             this.size += file.size;
         }
         for (Folder folder : folderList) {
             this.size += folder.size;
+        }
+        if (parentFolder != null) {
+            parentFolder.sizeUpdate();
         }
     }
 
@@ -38,12 +37,12 @@ public class Folder {
     }
 
     public void removeFile(File file) {
-        fileList.remove(file);
+        fileList.removeIf(f -> f.name.equals(file.name));
         sizeUpdate();
     }
 
     public void removeFolder(Folder folder) {
-        folderList.remove(folder);
+        folderList.removeIf(f -> f.name.equals(folder.name));
         sizeUpdate();
     }
 
