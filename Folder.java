@@ -5,29 +5,46 @@ public class Folder {
     public String name;
     public ArrayList<Folder> folderList = new ArrayList<>();
     public ArrayList<File> fileList = new ArrayList<>();
-    
+    public Folder parentFolder;
+
     public Folder(String name) {
         this.name = name;
     }
 
+    private void sizeUpdate() {
+        this.size = 0;
+        if (parentFolder != null) {
+            parentFolder.sizeUpdate();
+        }
+
+        for (File file : fileList) {
+            this.size += file.size;
+        }
+        for (Folder folder : folderList) {
+            this.size += folder.size;
+        }
+    }
+
     public void addFile(File file) {
+        file.parentFolder = this;
         fileList.add(file);
-        this.size += file.size;
+        sizeUpdate();
     }
 
     public void addFolder(Folder folder) {
+        folder.parentFolder = this;
         folderList.add(folder);
-        this.size += folder.size;
+        sizeUpdate();
     }
 
     public void removeFile(File file) {
         fileList.remove(file);
-        this.size -= file.size;
+        sizeUpdate();
     }
 
     public void removeFolder(Folder folder) {
         folderList.remove(folder);
-        this.size -= folder.size;
+        sizeUpdate();
     }
 
 }
